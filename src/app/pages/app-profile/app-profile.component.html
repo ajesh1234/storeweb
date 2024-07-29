@@ -1,0 +1,63 @@
+
+<ngx-spinner></ngx-spinner>
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    {{util.translate('My Profile')}}
+                </div>
+                <div class="card-body">
+                    <div class="row">                        
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{util.translate('First Name')}}</label>
+                                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="first_name" [placeholder]="util.translate('First Name')">
+                            </div>
+                        </div>                        
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{util.translate('Last Name')}}</label>
+                                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="last_name" [placeholder]="util.translate('Last Name')">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{util.translate('Country Code')}}</label>
+                                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="country_code"
+                                    [placeholder]="util.translate('Country Code')">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{util.translate('Mobile')}}</label>
+                                <input type="number" class="form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="mobile" [placeholder]="util.translate('Mobile Number')">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{util.translate('DOB')}}</label>
+                                <input type="date" class="form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="dob" [placeholder]="util.translate('DOB')">
+                            </div>
+                        </div>
+
+                    </div>                    
+
+                    <button type="button" class="btn btn-success" (click)="update()">
+                        {{util.translate('Submit')}}</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

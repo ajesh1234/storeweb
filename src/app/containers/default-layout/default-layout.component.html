@@ -1,0 +1,57 @@
+
+<app-header [navbarBrandRouterLink]="['/dashboard']" [fixed]="true"
+  [navbarBrandFull]="{src: 'assets/img/brand/big_logo.png', width: 55, height: 55, alt: 'DeliveryLo'}"
+  [navbarBrandMinimized]="{src: 'assets/img/brand/tiny.png', width: 30, height: 30, alt: 'DeliveryLo'}"
+  [sidebarToggler]="'lg'" [asideMenuToggler]="false" [mobileAsideMenuToggler]="false">
+
+  <ul class="nav navbar-nav ml-auto" style="margin-right: 20px;">
+
+    <li class="nav-item" style="margin-right:10px;">
+      <button class="btn btn-warning" (click)="updateStore(1)" *ngIf="util.store?.isClosed == 0">{{util.translate('Click Here To Open Store')}} </button>
+      <button class="btn btn-danger" (click)="updateStore(0)" *ngIf="util.store?.isClosed == 1">{{util.translate('Click Here To Close Store')}} </button>
+    </li>
+
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false"
+        dropdownToggle (click)="openDashboard();">
+        <span class="badge badge-pill badge-primary" style="float:right;margin-bottom:-10px;" *ngIf="noticount > 0">{{noticount}}</span>
+        <i class="fa fa-bell-o fa-lg"></i>
+      </a>
+    </li>
+
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+        dropdownToggle (click)="false">
+        <i class="fa fa-user-circle-o fa-lg"></i> {{name}} <i class="fa fa-caret-down fa-lg"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+
+        <!-- <a class="dropdown-item" (click)="openSettings()"><i class="fa fa-wrench"></i> {{util.translate('Setting')}}
+        </a> -->
+        <a class="dropdown-item" (click)="openProfile()"><i class="fa fa-user"></i> {{util.translate('My Profile')}} </a>
+        <a class="dropdown-item" (click)="openPassword()"><i class="fa fa-key"></i> {{util.translate('Change Password')}} </a>
+        <a class="dropdown-item" (click)="logout()"><i class="fa fa-lock"></i> {{util.translate('Logout')}} </a>
+      </div>
+    </li>
+  </ul>
+</app-header>
+<div class="app-body">
+  <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized"
+    (minimizedChange)="toggleMinimize($event)">
+    <app-sidebar-nav [navItems]="navData" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+  <main class="main">
+    <cui-breadcrumb>
+    </cui-breadcrumb>
+
+    <div class="container-fluid">
+      <router-outlet> </router-outlet>
+    </div>
+  </main>
+
+</div>
+<app-footer>
+  <span><a href="https://deliverylo.com/" target="_blank">DeliveryLo</a> &copy; {{currentYear}} DeliveryLo.</span>
+
+</app-footer>

@@ -1,0 +1,323 @@
+
+<div class="animated fadeIn">
+
+  <div class="social-icon">
+    <img src="assets/imgs/ride.gif" (click)="pickdrop()">
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3" (click)="openPage('products')">
+      <div class="card text-white bg-info" style="cursor: pointer;">
+        <div class="card-body pb-2">
+
+          <div class="text-value">{{products}} </div>
+          <div> {{util.translate('Total Products')}} </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3" (click)="openPage('reviews')">
+      <div class="card text-white bg-primary" style="cursor: pointer;">
+        <div class="card-body pb-2">
+
+          <div class="text-value">{{reviews}} </div>
+          <div>{{util.translate('Total Reviews')}} </div>
+        </div>
+
+      </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3" (click)="openPage('dashboard')">
+      <div class="card text-white bg-warning" style="cursor: pointer;">
+        <div class="card-body pb-2">
+
+          <div class="text-value">{{order}} </div>
+          <div>{{util.translate('Total Orders')}} </div>
+        </div>
+
+      </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3" (click)="openPage('dashboard')">
+      <div class="card text-white bg-danger" style="cursor: pointer;">
+        <div class="card-body pb-2">
+
+          <div class="text-value">{{ newOrders?.length || '0' }} </div>
+          <div> {{util.translate('New Orders')}} </div>
+        </div>
+
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+  <!--/.row-->
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{util.translate('All Orders')}}
+        </div>
+        <div class="card-body">
+          <tabset>
+            <tab heading="New Order">
+              <div style="height: 70vh;overflow: scroll;padding: 10px;">
+                <p *ngIf="!dummy?.length && !newOrders?.length" class="ion-text-center">
+                  {{util.translate('No New Orders Found')}}
+                </p>
+                <div class="card_div" *ngFor="let item of newOrders" (click)="goToOrder(item)">
+
+                  <div class="image_div">
+                    <img [src]="api.imageUrl+ item.orders[0].cover" onError="this.src='assets/imgs/user.png'">
+                  </div>
+                  <div class="desc_div">
+                    <p style="font-weight: bold;color: gray;font-size: 12px;"> {{util.translate('ORDER')}}
+                      #{{item.id}} <span style="float: right;">{{util.currecny}} {{item.grand_total | number : '1.2-2'}}</span>
+                    </p>
+                    <div *ngIf="item.orders?.length" class="border_bottom">
+                      <p *ngFor="let order of item.orders;let ol = index" class="items">
+                        <span *ngIf="order.size == 0 ">{{order.name}} -
+                          <span *ngIf="order.have_gram == 1"> {{order.gram}} {{util.translate('grams')}} </span>
+                          <span *ngIf="order.have_kg == 1"> {{order.kg}} {{util.translate('kg')}} </span>
+                          <span *ngIf="order.have_liter ==1"> {{order.liter}} {{util.translate('ltr')}} </span>
+                          <span *ngIf="order.have_ml ==1"> {{order.ml}} {{util.translate('ml')}} </span>
+                          <span *ngIf="order.have_pcs == 1"> {{order.pcs}} {{util.translate('pcs')}} </span>
+
+                          <span *ngIf="util.cside =='left'">
+                            {{util.currecny}} {{order.discount ==0 ? order.original_price : order.sell_price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                            {{order.discount ==0 ? order.original_price : order.sell_price}} {{util.currecny}}
+                          </span>
+
+                        </span>
+                        <span *ngIf="order.size == 1">
+                          {{order.name}} - <span> {{order.variations[0].items[order.variant].title}} </span>
+                          <span *ngIf="util.cside =='left'">
+                              {{util.currecny}} {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                              {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                              {{util.currecny}}
+                          </span>
+                        </span>
+                        <span>X {{order.quantiy}}</span>
+
+                      </p>
+
+                    </div>
+                    <p class="datetime">{{ item.date_time}}</p>
+                  </div>
+                  <div class="status" style="background: #f86c6b !important;">
+                    {{item.storeStatus}}
+                  </div>
+                </div>
+
+                <div class="card_div_skel" *ngFor="let item of dummy">
+                  <div *ngFor="let item of [1,2,3,4,5]" style="width: 100%;">
+                    <ngx-skeleton-loader count="1" appearance="line" style="width: 100%;height: 10px;">
+                    </ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+            </tab>
+            <tab heading="Out for delivery Order">
+              <div style="height: 70vh;overflow: scroll;padding: 10px;">
+                <p *ngIf="!dummy?.length && !onGoingOrders?.length" class="ion-text-center">
+                  {{util.translate('No Orders Found')}}
+                </p>
+                <div class="card_div" *ngFor="let item of onGoingOrders" (click)="goToOrder(item)">
+
+                  <div class="image_div">
+                    <img [src]="api.imageUrl+ item.orders[0].cover" onError="this.src='assets/imgs/user.png'">
+                  </div>
+                  <div class="desc_div">
+                    <p style="font-weight: bold;color: gray;font-size: 12px;"> {{util.translate('ORDER')}}
+                      #{{item.id}} <span style="float: right;">{{util.currecny}} {{item.grand_total | number : '1.2-2'}}</span>
+                    </p>
+                    <div *ngIf="item.orders?.length" class="border_bottom">
+                      <p *ngFor="let order of item.orders;let ol = index" class="items">
+                        <span *ngIf="order.size == 0 ">{{order.name}} -
+                          <span *ngIf="order.have_gram == 1"> {{order.gram}} {{util.translate('grams')}} </span>
+                          <span *ngIf="order.have_kg == 1"> {{order.kg}} {{util.translate('kg')}} </span>
+                          <span *ngIf="order.have_liter ==1"> {{order.liter}} {{util.translate('ltr')}} </span>
+                          <span *ngIf="order.have_ml ==1"> {{order.ml}} {{util.translate('ml')}} </span>
+                          <span *ngIf="order.have_pcs == 1"> {{order.pcs}} {{util.translate('pcs')}} </span>
+
+                          <span *ngIf="util.cside =='left'">
+                            {{util.currecny}} {{order.discount ==0 ? order.original_price : order.sell_price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                            {{order.discount ==0 ? order.original_price : order.sell_price}} {{util.currecny}}
+                          </span>
+
+                        </span>
+                        <span *ngIf="order.size == 1">
+                          {{order.name}} - <span> {{order.variations[0].items[order.variant].title}} </span>
+                          <span *ngIf="util.cside =='left'">
+                              {{util.currecny}} {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                              {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                              {{util.currecny}}
+                          </span>
+                        </span>
+                        <span>X {{order.quantiy}}</span>
+
+                      </p>
+
+                    </div>
+                    <p class="datetime">{{ item.date_time}}</p>
+                  </div>
+                  <div class="status">
+                    {{util.translate(item.storeStatus)}}
+                  </div>
+                </div>
+                <div class="card_div_skel" *ngFor="let item of dummy">
+                  <div *ngFor="let item of [1,2,3,4,5]" style="width: 100%;">
+                    <ngx-skeleton-loader count="1" appearance="line" style="width: 100%;height: 10px;">
+                    </ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+            </tab>
+            <!-- <tab heading="Pick-up Order">
+              <div style="height: 70vh;overflow: scroll;padding: 10px;">
+                <p *ngIf="!dummy?.length && !onPickOrders?.length" class="ion-text-center">
+                  {{util.translate('No Orders Found')}}
+                </p>
+                <div class="card_div" *ngFor="let item of onPickOrders" (click)="goToOrder(item)">
+
+                  <div class="image_div">
+                    <img [src]="api.imageUrl+ item.orders[0].cover" onError="this.src='assets/imgs/user.png'">
+                  </div>
+                  <div class="desc_div">
+                    <p style="font-weight: bold;color: gray;font-size: 12px;"> {{util.translate('ORDER')}}
+                      #{{item.id}}
+                    </p>
+                    <div *ngIf="item.orders?.length" class="border_bottom">
+                      <p *ngFor="let order of item.orders;let ol = index" class="items">
+                        <span *ngIf="order.size == 0 ">{{order.name}} -
+                          <span *ngIf="order.have_gram == 1"> {{order.gram}} {{util.translate('grams')}} </span>
+                          <span *ngIf="order.have_kg == 1"> {{order.kg}} {{util.translate('kg')}} </span>
+                          <span *ngIf="order.have_liter ==1"> {{order.liter}} {{util.translate('ltr')}} </span>
+                          <span *ngIf="order.have_ml ==1"> {{order.ml}} {{util.translate('ml')}} </span>
+                          <span *ngIf="order.have_pcs == 1"> {{order.pcs}} {{util.translate('pcs')}} </span>
+
+                          <span *ngIf="util.cside =='left'">
+                            {{util.currecny}} {{order.discount ==0 ? order.original_price : order.sell_price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                            {{order.discount ==0 ? order.original_price : order.sell_price}} {{util.currecny}}
+                          </span>
+
+                        </span>
+                        <span *ngIf="order.size == 1">
+                          {{order.name}} - <span> {{order.variations[0].items[order.variant].title}} </span>
+                          <span *ngIf="util.cside =='left'">
+                              {{util.currecny}} {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                              {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                              {{util.currecny}}
+                          </span>
+                        </span>
+                        <span>X {{order.quantiy}}</span>
+
+                      </p>
+
+                    </div>
+                    <p class="datetime">{{ item.date_time}}</p>
+                  </div>
+                  <div class="status">
+                    {{util.translate('Self Pickup')}}
+                  </div>
+                </div>
+                <div class="card_div_skel" *ngFor="let item of dummy">
+                  <div *ngFor="let item of [1,2,3,4,5]" style="width: 100%;">
+                    <ngx-skeleton-loader count="1" appearance="line" style="width: 100%;height: 10px;">
+                    </ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+            </tab> -->
+            <tab heading="Past Order">
+              <div style="height: 70vh;overflow: scroll;padding: 10px;">
+                <p *ngIf="!dummy?.length && !olders?.length" class="ion-text-center">
+                  {{util.translate('No New Orders Found')}}
+                </p>
+                <div class="card_div" *ngFor="let item of olders" (click)="goToOrder(item)">
+
+                  <div class="image_div">
+                    <img [src]="api.imageUrl+ item.orders[0].cover" onError="this.src='assets/imgs/user.png'">
+                  </div>
+                  <div class="desc_div">
+                    <p style="font-weight: bold;color: gray;font-size: 12px;"> {{util.translate('ORDER')}}
+                      #{{item.id}} <span style="float: right;">{{util.currecny}} {{item.grand_total | number : '1.2-2'}}</span>
+                    </p>
+                    <div *ngIf="item.orders?.length" class="border_bottom">
+                      <p *ngFor="let order of item.orders;let ol = index" class="items">
+                        <span *ngIf="order.size == 0 ">{{order.name}} -
+                          <span *ngIf="order.have_gram == 1"> {{order.gram}} {{util.translate('grams')}} </span>
+                          <span *ngIf="order.have_kg == 1"> {{order.kg}} {{util.translate('kg')}} </span>
+                          <span *ngIf="order.have_liter ==1"> {{order.liter}} {{util.translate('ltr')}} </span>
+                          <span *ngIf="order.have_ml ==1"> {{order.ml}} {{util.translate('ml')}} </span>
+                          <span *ngIf="order.have_pcs == 1"> {{order.pcs}} {{util.translate('pcs')}} </span>
+
+                          <span *ngIf="util.cside =='left'">
+                            {{util.currecny}} {{order.discount ==0 ? order.original_price : order.sell_price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                            {{order.discount ==0 ? order.original_price : order.sell_price}} {{util.currecny}}
+                          </span>
+
+                        </span>
+                        <span *ngIf="order.size == 1">
+                          {{order.name}} - <span> {{order.variations[0].items[order.variant].title}} </span>
+                          <span *ngIf="util.cside =='left'">
+                              {{util.currecny}} {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                          </span>
+                          <span *ngIf="util.cside =='right'">
+                              {{order.variations[0].items[order.variant].discount ==0 ? order.variations[0].items[order.variant].price :
+                              order.variations[0].items[order.variant].price}}
+                              {{util.currecny}}
+                          </span>
+                        </span>
+                        <span>X {{order.quantiy}}</span>
+
+                      </p>
+
+                    </div>
+                    <p class="datetime">{{ item.date_time}}</p>
+                  </div>
+                  <div class="status" *ngIf="item.storeStatus=='cancelled' || item.storeStatus=='rejected'" style="background: red !important;">
+                    {{item.storeStatus}}
+                  </div>
+                  <div class="status" *ngIf="item.storeStatus!='cancelled' && item.storeStatus!='rejected'" style="background: green !important;">
+                    {{item.storeStatus}}
+                  </div>
+                </div>
+
+                <div class="card_div_skel" *ngFor="let item of dummy">
+                  <div *ngFor="let item of [1,2,3,4,5]" style="width: 100%;">
+                    <ngx-skeleton-loader count="1" appearance="line" style="width: 100%;height: 10px;">
+                    </ngx-skeleton-loader>
+                  </div>
+                </div>
+              </div>
+            </tab>
+          </tabset>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+
+</div>
